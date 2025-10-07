@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String          @id @default(uuid())
+  email          String          @unique
+  password       String
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  WareHouses     WareHouse?
+  Products       Product[]
+  PurchaseOrders PurchaseOrder[]
+}
+
+model WareHouse {
+  id             String          @id @default(uuid())
+  name           String
+  location       String
+  capacity       Int
+  userId         String          @unique
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Products       Product[]
+  PurchaseOrders PurchaseOrder[]
+}
+
+model Supplier {
+  id                 String          @id @default(uuid())
+  name               String
+  contactInformation Json
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  Products           Product[]
+  PurchaseOrders     PurchaseOrder[]
+}
+
+model Product {
+  id               String    @id
+  name             String
+  description      String
+  reorderThreshold Int
+  quantityInStock  Int
+  supplierId       String    @unique
+  supplier         Supplier  @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  ownerId          String    @unique
+  owner            User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  wareHouseId      String
+  wareHouse        WareHouse @relation(fields: [wareHouseId], references: [id], onDelete: Cascade)
+}
+
+model PurchaseOrder {
+  id                  String       @id @default(uuid())
+  productId           String
+  supplierId          String
+  supplier            Supplier     @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  quantity            Int
+  status              ORDER_STATUS @default(PENDING)
+  orderDate           DateTime     @default(now())
+  wareHouseId         String
+  wareHouse           WareHouse    @relation(fields: [wareHouseId], references: [id], onDelete: Cascade)
+  userId              String
+  user                User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expectedArrivalDate DateTime
+  updatedAt           DateTime     @updatedAt
+}
+
+enum ORDER_STATUS {
+  PENDING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
