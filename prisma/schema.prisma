@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  // output   = "../generated/prisma"
 }
 
 datasource db {
@@ -20,7 +20,7 @@ model User {
   password       String
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
-  WareHouses     WareHouse?
+  WareHouses     WareHouse[]
   Products       Product[]
   PurchaseOrders PurchaseOrder[]
 }
@@ -30,7 +30,7 @@ model WareHouse {
   name           String
   location       String
   capacity       Int
-  userId         String          @unique
+  userId         String          
   user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   Products       Product[]
   PurchaseOrders PurchaseOrder[]
@@ -52,9 +52,9 @@ model Product {
   description      String
   reorderThreshold Int
   quantityInStock  Int
-  supplierId       String    @unique
+  supplierId       String    
   supplier         Supplier  @relation(fields: [supplierId], references: [id], onDelete: Cascade)
-  ownerId          String    @unique
+  ownerId          String   
   owner            User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   wareHouseId      String
   wareHouse        WareHouse @relation(fields: [wareHouseId], references: [id], onDelete: Cascade)

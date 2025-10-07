@@ -1,10 +1,16 @@
-import { PrismaClient } from 'generated/prisma';
-const prisma = new PrismaClient();
+import { PrismaClient } from '@prisma/client';
 import * as argon from 'argon2';
+import products from './products.json';
+import suppliersJson from './suppliers.json';
+import warehouses from './warehouses.json';
+
+const prisma = new PrismaClient();
 
 async function main() {
-  const password = process.env.USER_DEFAULT_PASSWORD;
+  console.log('Seeding database...');
+  const password = process.env.USER_DEFAULT_PASSWORD || 'password123';
 
+  // 1️⃣ Create or update a default user
   const user = await prisma.user.upsert({
     where: { email: 'user@mail.com' },
     update: {},
@@ -13,39 +19,67 @@ async function main() {
       password: await argon.hash(password),
     },
   });
-  const [warehouse1, wareHouse2, warehouse3] = await Promise.all([
-    prisma.wareHouse.upsert({
-      where: { id: 'b6a1c8f1-8b2f-4c3e-bd5e-9f734a42d8b9' },
-      create: {
-        name: 'warehouse-1',
-        location: '22 hart-ford road,new Layout',
-        capacity: 500,
-        userId: user.id,
-        id: 'b6a1c8f1-8b2f-4c3e-bd5e-9f734a42d8b9',
-      },
-      update: {},
-    }),
-    prisma.wareHouse.upsert({
-      where: { id: 'd4c7e6e2-1a59-4b61-a8f4-5aef9e7d2d4b' },
-      create: {
-        name: 'warehouse-2',
-        location: '33 hart-ford road,new Layout',
-        capacity: 750,
-        userId: user.id,
-        id: 'd4c7e6e2-1a59-4b61-a8f4-5aef9e7d2d4b',
-      },
-      update: {},
-    }),
-    prisma.wareHouse.upsert({
-      where: { id: 'f9d3d788-872a-4306-8916-421f76b30802' },
-      create: {
-        name: 'warehouse-3',
-        location: '44 hart-ford road,new Layout',
-        capacity: 1000,
-        userId: user.id,
-        id: '9f23bde3-3a2b-4e8f-9c74-2e0b92b3e5cd',
-      },
-      update: {},
-    }),
-  ]);
+
+  // 2️⃣ Seed warehouses
+  await Promise.all(
+    warehouses.map((wh) =>
+      prisma.wareHouse.upsert({
+        where: { id: wh.id },
+        update: {},
+        create: {
+          id: wh.id,
+          name: wh.name,
+          location: wh.location,
+          capacity: wh.capacity,
+          userId: user.id,
+        },
+      }),
+    ),
+  );
+
+  // 3️⃣ Seed suppliers
+  await Promise.all(
+    suppliersJson.map((supplier) =>
+      prisma.supplier.upsert({
+        where: { id: supplier.id },
+        update: {},
+        create: {
+          id: supplier.id,
+          name: supplier.name,
+          contactInformation: supplier.contactInformation,
+        },
+      }),
+    ),
+  );
+
+  // 4️⃣ Seed products
+  await Promise.all(
+    products.map((product) =>
+      prisma.product.upsert({
+        where: { id: product.id },
+        update: {},
+        create: {
+          id: product.id,
+          name: product.name,
+          description: product.description,
+          quantityInStock: 100,
+          reorderThreshold: 20,
+          ownerId: user.id,
+          supplierId: product.supplierId,
+          wareHouseId: product.warehouseId,
+        },
+      }),
+    ),
+  );
+
+  console.log('✅ Database seeded successfully!');
 }
+
+main()
+  .catch((err) => {
+    console.error('❌ Seeding error:', err);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

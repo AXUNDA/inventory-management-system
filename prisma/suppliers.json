@@ -1,0 +1,20 @@
+[
+  {
+    "id": "3c475d84-2747-4943-a5d7-8d5415979899",
+    "name": "Supplier-1",
+    "contactInformation": {
+      "email": "supplier1@mail.com",
+      "phoneNumber": "1234567890",
+      "address": "111 main street, new york"
+    }
+  },
+  {
+    "id": "c32d9225-7613-4721-8201-d96b5b0b5b53",
+    "name": "Supplier-2",
+    "contactInformation": {
+      "email": "supplier2@mail.com",
+      "phoneNumber": "9876543210",
+      "address": "222 main street, new york"
+    }
+  }
+]

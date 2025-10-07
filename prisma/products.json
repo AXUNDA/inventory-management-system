@@ -1,0 +1,72 @@
+[
+  {
+    "id": "AUD-WBH-BLK-4821",
+    "name": "Wireless Bluetooth Headphones",
+    "description": "Over-ear Bluetooth headphones with 20-hour battery life and deep bass sound.",
+    "supplierId": "3c475d84-2747-4943-a5d7-8d5415979899",
+    "warehouseId": "b6a1c8f1-8b2f-4c3e-bd5e-9f734a42d8b9"
+  },
+  {
+    "id": "KIT-SSB-1L-7395",
+    "name": "Stainless Steel Water Bottle 1L",
+    "description": "Eco-friendly insulated bottle that keeps drinks cold for 24 hours or hot for 12 hours.",
+    "supplierId": "3c475d84-2747-4943-a5d7-8d5415979899",
+    "warehouseId": "b6a1c8f1-8b2f-4c3e-bd5e-9f734a42d8b9"
+  },
+  {
+    "id": "SHO-MRS-BLU-9137",
+    "name": "Men’s Running Sneakers",
+    "description": "Lightweight, breathable running shoes designed for comfort and performance.",
+    "supplierId": "3c475d84-2747-4943-a5d7-8d5415979899",
+    "warehouseId": "b6a1c8f1-8b2f-4c3e-bd5e-9f734a42d8b9"
+  },
+  {
+    "id": "HOM-LDL-WHT-2259",
+    "name": "Smart LED Desk Lamp",
+    "description": "Adjustable LED lamp with touch controls and USB charging port.",
+    "supplierId": "3c475d84-2747-4943-a5d7-8d5415979899",
+    "warehouseId": "d4c7e6e2-1a59-4b61-a8f4-5aef9e7d2d4b"
+  },
+  {
+    "id": "FOO-OGT-50B-6724",
+    "name": "Organic Green Tea (50 Bags)",
+    "description": "Premium organic green tea sourced from sustainable farms.",
+    "supplierId": "3c475d84-2747-4943-a5d7-8d5415979899",
+    "warehouseId": "d4c7e6e2-1a59-4b61-a8f4-5aef9e7d2d4b"
+  },
+  {
+    "id": "ACC-UCL-1M-3178",
+    "name": "USB-C to Lightning Cable (1m)",
+    "description": "Fast-charging cable compatible with iPhones and iPads.",
+    "supplierId": "c32d9225-7613-4721-8201-d96b5b0b5b53",
+    "warehouseId": "d4c7e6e2-1a59-4b61-a8f4-5aef9e7d2d4b"
+  },
+  {
+    "id": "HOM-CTP-GRY-5840",
+    "name": "Cotton Throw Pillow (Set of 2)",
+    "description": "Soft, durable decorative pillows with removable covers.",
+    "supplierId": "c32d9225-7613-4721-8201-d96b5b0b5b53",
+    "warehouseId": "9f23bde3-3a2b-4e8f-9c74-2e0b92b3e5cd"
+  },
+  {
+    "id": "ACC-WLW-BRN-4962",
+    "name": "Women’s Leather Wallet",
+    "description": "Classic brown leather wallet with multiple card and cash compartments.",
+    "supplierId": "c32d9225-7613-4721-8201-d96b5b0b5b53",
+    "warehouseId": "9f23bde3-3a2b-4e8f-9c74-2e0b92b3e5cd"
+  },
+  {
+    "id": "ELE-WCP-BLK-2683",
+    "name": "Wireless Charging Pad",
+    "description": "Qi-certified charging pad compatible with all wireless-charging devices.",
+    "supplierId": "c32d9225-7613-4721-8201-d96b5b0b5b53",
+    "warehouseId": "9f23bde3-3a2b-4e8f-9c74-2e0b92b3e5cd"
+  },
+  {
+    "id": "ELE-FSW-SLV-7321",
+    "name": "Fitness Smartwatch",
+    "description": "Tracks heart rate, sleep, and steps with a sleek waterproof design.",
+    "supplierId": "c32d9225-7613-4721-8201-d96b5b0b5b53",
+    "warehouseId": "9f23bde3-3a2b-4e8f-9c74-2e0b92b3e5cd"
+  }
+]

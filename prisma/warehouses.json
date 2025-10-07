@@ -1,0 +1,20 @@
+[
+  {
+    "id": "b6a1c8f1-8b2f-4c3e-bd5e-9f734a42d8b9",
+    "name": "warehouse-1",
+    "location": "22 hart-ford road,new Layout",
+    "capacity": 500
+  },
+  {
+    "id": "d4c7e6e2-1a59-4b61-a8f4-5aef9e7d2d4b",
+    "name": "warehouse-2",
+    "location": "33 hart-ford road,new Layout",
+    "capacity": 750
+  },
+  {
+    "id": "9f23bde3-3a2b-4e8f-9c74-2e0b92b3e5cd",
+    "name": "warehouse-3",
+    "location": "44 hart-ford road,new Layout",
+    "capacity": 1000
+  }
+]
