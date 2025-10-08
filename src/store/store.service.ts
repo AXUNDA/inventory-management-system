@@ -28,6 +28,39 @@ export class StoreService {
   async getProductById(productId: string, user: User) {
     return this.productService.findOne({ id: productId, ownerId: user.id });
   }
+  async markOrderAsDelivered(id: string, user: User) {
+    const order = await this.purchaseOrderService.findOne({
+      id,
+      userId: user.id,
+    });
+    if (!order) {
+      throw new Error('Purchase Order not found');
+    }
+    if (order?.status === 'DELIVERED') {
+      throw new BadRequestException(
+        'Purchase Order is already marked as delivered',
+      );
+    }
+
+    const update = await this.purchaseOrderService.update(
+      { id, userId: user.id },
+      {
+        status: 'DELIVERED',
+      },
+    );
+
+    await this.productService.update(
+      { id: order.productId, ownerId: user.id },
+      {
+        quantityInStock: {
+          increment: order.quantity,
+        },
+      },
+    );
+
+    console.log({ update });
+    return update;
+  }
   async adjustProductQuantity(id: string, quantityChange: number, user: User) {
     const product = await this.productService.findOne({ id, ownerId: user.id });
     if (!product) {
@@ -37,6 +70,7 @@ export class StoreService {
     if (updatedQuantity < 0) {
       throw new BadRequestException('Cannot adjust quantity below zero');
     }
+
     const update = await this.productService.update(
       { id, ownerId: user.id },
       {
@@ -49,7 +83,7 @@ export class StoreService {
       await this.purchaseOrderQueue.add('create-purchase-order', {
         productId: id,
         wareHouseId: update.wareHouseId,
-        quantity: 100,
+        quantity: 200,
         userId: user.id,
         supplierId: product.supplierId,
       });
@@ -61,37 +95,5 @@ export class StoreService {
   }
   async getPurchaseOrders(user: User) {
     return await this.purchaseOrderService.findAll({ userId: user.id });
-  }
-  async markOrderAsDelivered(id: string, user: User) {
-    const order = await this.purchaseOrderService.findOne({
-      id,
-      userId: user.id,
-    });
-    if (!order) {
-      throw new Error('Purchase Order not found');
-    }
-    if (order.status === 'DELIVERED') {
-      throw new BadRequestException(
-        'Purchase Order is already marked as delivered',
-      );
-    }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [update, __] = await Promise.all([
-      this.purchaseOrderService.update(
-        { id, userId: user.id },
-        {
-          status: 'DELIVERED',
-        },
-      ),
-      this.productService.update(
-        { id: order.productId, ownerId: user.id },
-        {
-          quantityInStock: {
-            increment: order.quantity,
-          },
-        },
-      ),
-    ]);
-    return update;
   }
 }

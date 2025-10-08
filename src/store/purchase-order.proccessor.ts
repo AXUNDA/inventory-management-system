@@ -24,10 +24,9 @@ export class CreatePurchaseOrderProcessor extends WorkerHost {
           const [wareHouse, numberOfProductsInWarehouse] = await Promise.all([
             this.warehouseService.findOne({ id: job.data.wareHouseId }),
             this.productService.sumProductsInWarehouse({
-              id: job.data.productId,
+              wareHouseId: job.data.wareHouseId,
             }),
           ]);
-
           await this.purchaseOrderService.create({
             productId: job.data.productId,
             wareHouseId: job.data.wareHouseId,

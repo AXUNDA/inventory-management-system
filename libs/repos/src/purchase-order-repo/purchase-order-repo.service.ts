@@ -13,7 +13,14 @@ export class PurchaseOrderRepoService {
     skip?: number,
     take?: number,
   ) {
-    return await this.prisma.purchaseOrder.findMany({ where: dto, skip, take });
+    return await this.prisma.purchaseOrder.findMany({
+      where: dto,
+      skip,
+      take,
+      orderBy: {
+        orderDate: 'desc',
+      },
+    });
   }
   async create(dto: Prisma.PurchaseOrderUncheckedCreateInput) {
     return await this.prisma.purchaseOrder.create({ data: dto });

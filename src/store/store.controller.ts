@@ -55,6 +55,6 @@ export class StoreController {
     @GetCurrentUser() user: User,
     @Param('orderId') orderId: string,
   ) {
-    await this.storeService.markOrderAsDelivered(orderId, user);
+    return await this.storeService.markOrderAsDelivered(orderId, user);
   }
 }
