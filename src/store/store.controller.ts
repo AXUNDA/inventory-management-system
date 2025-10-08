@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   Param,
@@ -10,6 +11,7 @@ import { StoreService } from './store.service';
 import { GetCurrentUser } from 'src/auth/decorators/getUser.decorator';
 import { Prisma, User } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { AdjustQuantityDto } from './dto/adjust-quantity-dto';
 @UseGuards(JwtAuthGuard)
 @Controller('store')
 export class StoreController {
@@ -36,19 +38,19 @@ export class StoreController {
   async adjustProductQuantity(
     @GetCurrentUser() user: User,
     @Param('productId') productId: string,
-    @Query('quantityChange') quantityChange: number,
+    @Body() body: AdjustQuantityDto,
   ) {
-    await this.storeService.adjustProductQuantity(
+    return this.storeService.adjustProductQuantity(
       productId,
-      quantityChange,
+      body.quantityChange,
       user,
     );
   }
-  @Get('purchaseOrders')
+  @Get('purchase-orders')
   async getPurchaseOrders(@GetCurrentUser() user: User) {
     return this.storeService.getPurchaseOrders(user);
   }
-  @Patch('purchaseOrders/:orderId/markAsDelivered')
+  @Patch('purchase-orders/:orderId')
   async markOrderAsDelivered(
     @GetCurrentUser() user: User,
     @Param('orderId') orderId: string,

@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { StoreModule } from './store/store.module';
 import * as Joi from 'joi';
 import { ConfigModule } from '@nestjs/config';
+import { BullModule } from '@nestjs/bullmq';
 
 @Module({
   imports: [
@@ -19,6 +20,12 @@ import { ConfigModule } from '@nestjs/config';
         NODE_ENV: Joi.string().required(),
         COOKIE_EXPIRATION: Joi.number().required(),
       }),
+    }),
+    BullModule.forRoot({
+      connection: {
+        host: 'localhost',
+        port: 6379,
+      },
     }),
   ],
   controllers: [AppController],

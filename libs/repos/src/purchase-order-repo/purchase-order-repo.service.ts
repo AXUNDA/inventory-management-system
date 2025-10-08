@@ -15,7 +15,7 @@ export class PurchaseOrderRepoService {
   ) {
     return await this.prisma.purchaseOrder.findMany({ where: dto, skip, take });
   }
-  async create(dto: Prisma.PurchaseOrderCreateInput) {
+  async create(dto: Prisma.PurchaseOrderUncheckedCreateInput) {
     return await this.prisma.purchaseOrder.create({ data: dto });
   }
   async update(

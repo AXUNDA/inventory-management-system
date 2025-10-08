@@ -6,12 +6,16 @@ import {
 } from '@app/repos';
 import { Prisma, User } from '@prisma/client';
 
+import { Queue } from 'bullmq';
+import { InjectQueue } from '@nestjs/bullmq';
+
 @Injectable()
 export class StoreService {
   constructor(
     private readonly productService: ProductRepoService,
     private readonly warehouseService: WarehouseRepoService,
     private readonly purchaseOrderService: PurchaseOrderRepoService,
+    @InjectQueue('purchase-order') private purchaseOrderQueue: Queue,
   ) {}
 
   async getProducts(user: User, where: Prisma.ProductWhereInput) {
@@ -33,7 +37,7 @@ export class StoreService {
     if (updatedQuantity < 0) {
       throw new BadRequestException('Cannot adjust quantity below zero');
     }
-    await this.productService.update(
+    const update = await this.productService.update(
       { id, ownerId: user.id },
       {
         quantityInStock: {
@@ -41,6 +45,17 @@ export class StoreService {
         },
       },
     );
+    if (update.quantityInStock <= update.reorderThreshold) {
+      await this.purchaseOrderQueue.add('create-purchase-order', {
+        productId: id,
+        wareHouseId: update.wareHouseId,
+        quantity: 100,
+        userId: user.id,
+        supplierId: product.supplierId,
+      });
+    }
+
+    return update;
 
     // run queue job
   }
@@ -55,13 +70,28 @@ export class StoreService {
     if (!order) {
       throw new Error('Purchase Order not found');
     }
-    await this.purchaseOrderService.update(
-      { id, userId: user.id },
-      {
-        status: 'DELIVERED',
-      },
-    );
-
-    // run queue job
+    if (order.status === 'DELIVERED') {
+      throw new BadRequestException(
+        'Purchase Order is already marked as delivered',
+      );
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [update, __] = await Promise.all([
+      this.purchaseOrderService.update(
+        { id, userId: user.id },
+        {
+          status: 'DELIVERED',
+        },
+      ),
+      this.productService.update(
+        { id: order.productId, ownerId: user.id },
+        {
+          quantityInStock: {
+            increment: order.quantity,
+          },
+        },
+      ),
+    ]);
+    return update;
   }
 }

@@ -6,7 +6,13 @@ import { Prisma } from '@prisma/client';
 export class ProductRepoService {
   constructor(private readonly prisma: PrismaService) {}
   async findOne(dto: Prisma.ProductWhereUniqueInput) {
-    return await this.prisma.product.findUnique({ where: dto });
+    return await this.prisma.product.findUnique({
+      where: dto,
+      include: {
+        supplier: true,
+        wareHouse: true,
+      },
+    });
   }
   async findAll(dto: Prisma.ProductWhereInput, skip?: number, take?: number) {
     return await this.prisma.product.findMany({ where: dto, skip, take });
@@ -19,5 +25,11 @@ export class ProductRepoService {
     data: Prisma.ProductUpdateInput,
   ) {
     return await this.prisma.product.update({ where: dto, data });
+  }
+  async sumProductsInWarehouse(dto: Prisma.ProductWhereInput) {
+    return await this.prisma.product.aggregate({
+      where: dto,
+      _sum: { quantityInStock: true },
+    });
   }
 }
